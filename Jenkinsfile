@@ -11,7 +11,12 @@
 // then do it using "parallel"
 
 pipeline {
-    agent any
+    agent {
+        node {
+            label 'common-ws-agent'
+            customWorkspace 'monorepo-experiments-master'
+        }
+    }
 
     stages {
         stage('init') {
@@ -25,7 +30,7 @@ pipeline {
         stage('monorepo-library') {
             when {
                 expression {
-                    matches = bat(returnStatus:true, script: "git diff --name-only $MY_GIT_PREVIOUS_SUCCESSFUL_COMMIT")
+                    matches = sh(returnStatus:true, script: "git diff --name-only $MY_GIT_PREVIOUS_SUCCESSFUL_COMMIT|egrep -q '^monorepo-library'")
                     return !matches
                 }
             }
@@ -36,7 +41,7 @@ pipeline {
         stage('play-a') {
             when {
                 expression {
-                    matches = bat(returnStatus: true, script: "git diff --name-only $MY_GIT_PREVIOUS_SUCCESSFUL_COMMIT")
+                    matches = sh(returnStatus: true, script: "git diff --name-only $MY_GIT_PREVIOUS_SUCCESSFUL_COMMIT|egrep -q '^play-a'")
                     return !matches
                 }
             }
@@ -47,7 +52,7 @@ pipeline {
         stage('play-b') {
             when {
                 expression {
-                    matches = bat(returnStatus: true, script: "git diff --name-only $MY_GIT_PREVIOUS_SUCCESSFUL_COMMIT")
+                    matches = sh(returnStatus: true, script: "git diff --name-only $MY_GIT_PREVIOUS_SUCCESSFUL_COMMIT|egrep -q '^play-b'")
                     return !matches
                 }
             }
