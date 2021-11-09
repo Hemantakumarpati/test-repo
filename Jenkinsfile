@@ -11,13 +11,7 @@
 // then do it using "parallel"
 
 pipeline {
-    agent {
-        node {
-            label 'common-ws-agent'
-            customWorkspace 'monorepo-experiments-master'
-        }
-    }
-
+    
     stages {
         stage('init') {
             steps {
