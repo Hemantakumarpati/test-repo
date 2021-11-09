@@ -11,7 +11,7 @@
 // then do it using "parallel"
 
 pipeline {
-    
+    agent any
     stages {
         stage('init') {
             steps {
